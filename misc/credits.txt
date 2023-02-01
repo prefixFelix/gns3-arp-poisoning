@@ -1,0 +1,3 @@
+# royalty-free images
+innocent_cat.jpg:   https://pixabay.com/users/super-mapio-2011986/
+evil_cat.jpg:       https://pixabay.com/users/photosforyou-124319/
