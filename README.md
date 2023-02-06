@@ -6,7 +6,7 @@
 ## Overview
 
 This lab is intended to be a simplified representation of an enterprise network. This is divided into two networks each:  
-Network 1 should resemble an office network used by the employees. Because clients fluctuate frequently, IP addresses are assigned by a DHCP server. Our victim and the attacker are also located in this network. The victim tries to download data to and from an FTP server located on the second network. Only the company's servers are located in this second network, which is why all clients have been assigned a fixed IP address. The attacker now tries to establish a position between the victim and the FTP server so that the attacker can control all traffic between the two. To achieve this, he has three different ARP-poisoning tools at his disposal: Ettercap, Scapy and ARPing.
+Network 1 should resemble an office network used by the employees. Because clients fluctuate frequently, IP addresses are assigned by a DHCP server. Our victim and the attacker are also located in this network. The victim tries to download and upload data from an FTP server located on the second network. Only the company's servers are located in this second network, which is why all clients have been assigned a fixed IP address. The attacker now tries to establish a position between the victim and the FTP server so that the attacker can control all traffic between the two. To achieve this, he has three different ARP-poisoning tools at his disposal: Ettercap, Scapy and ARPing.
 
 | Role     | Purpose    | Software                | Virtualization-typ |
 | -------- | ---------- | ----------------------- | ------------------ |
@@ -26,6 +26,8 @@ Network 1 should resemble an office network used by the employees. Because clien
 
 3. Open GNS3 and select the previously downloaded file under *File > Import portable project*. Then select a desired location and press OK. The project will now be imported, thereby various Docker containers will be downloaded from Dockerhub, which is why the import can take a few minutes.
 
-   > :information_source: If you are using the GNS3 VM, you must first make sure that it is started before importing the project. This can be seen on the right side under the Server Summary.
+   > :information_source: If you are using the GNS3 VM, you must first make sure that it is started before importing the project. This can be seen on the right side under the *Server Summary*.
+
+   > :information_source: The images for the containers of the victim and the attacker can also be built via the [Dockerfiles](docker/) in the repo itself. How to use them with GNS3 can be read [here](https://docs.gns3.com/docs/emulators/create-a-docker-container-for-gns3/).
 
 4. Now start all nodes. It makes sense to start the router first, because it needs a few seconds before it is fully operational.
