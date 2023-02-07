@@ -7,44 +7,31 @@ FROM debian:bullseye-slim
 
 MAINTAINER prefixfelix
 
-
-# Install ettercap, arping, scapy + dependencies + network stuff
+# Install basic / networking tools
 RUN set -ex; \
     \
     apt-get update; \
-    DEBIAN_FRONTEND=noninteractive apt-get -y --no-install-recommends install \
-        build-essential debhelper bison check cmake flex groff libbsd-dev libcurl4-openssl-dev \
-        libmaxminddb-dev libgtk-3-dev libltdl-dev libluajit-5.1-dev libncurses5-dev libnet1-dev \
-        libpcap-dev libpcre2-dev libssl-dev zip unzip curl ca-certificates ethtool wget; \
     dpkg-query -f '${binary:Package}\n' -W | sort > base_packages; \
-    curl -OL https://github.com/Ettercap/ettercap/archive/refs/heads/master.zip; \
-    unzip master.zip; \
-    cd ettercap-master; \
-    mkdir build; \
-    cd build; \
-    pwd; \
-    cmake ..; \
-    make install; \
-    cd ../..; \
-    rm -r ettercap-master; \
-    sed -i 's/65534/0/' etc/ettercap/etter.conf; \
     dpkg-query -f '${binary:Package}\n' -W | sort > packages; \
     DEBIAN_FRONTEND=noninteractive apt-get -y purge `comm -13 base_packages packages`; \
     rm -f base_packages packages; \
     \
     DEBIAN_FRONTEND=noninteractive apt-get -y --no-install-recommends install \
         iproute2 iputils-ping net-tools tcpdump telnet traceroute iperf3 knot-host mtr-tiny \
-        socat nano isc-dhcp-client arping python3 python3-scapy; \
+        socat nano isc-dhcp-client ca-certificates wget; \
     rm -rf /var/lib/apt/lists/*
 
 
+# Download additional files for the lab
 RUN set -ex; \
     \
     cd /root; \
-    wget https://raw.githubusercontent.com/prefixFelix/gns3-arp-poisoning/main/misc/evil_cat.jpg
+    wget https://raw.githubusercontent.com/prefixFelix/gns3-arp-poisoning/main/misc/manipulated-payroll.txt; \
+    wget https://raw.githubusercontent.com/prefixFelix/gns3-arp-poisoning/main/ettercap-filters/extract-img.ef; \
+    wget https://raw.githubusercontent.com/prefixFelix/gns3-arp-poisoning/main/ettercap-filters/manipulate-txt.ef
 
 
-# Install connection stuff
+# Install ettercap, arping, scapy + dependencies + network stuff
 ADD https://github.com/Yelp/dumb-init/releases/download/v1.2.2/dumb-init_1.2.2_amd64 /usr/local/sbin/dumb-init
 
 RUN set -ex; \
@@ -52,8 +39,9 @@ RUN set -ex; \
     chmod 755 /usr/local/sbin/dumb-init; \
     apt-get update; \
     DEBIAN_FRONTEND=noninteractive apt-get -y --no-install-recommends install \
-        lxterminal jwm menu mousepad apache2-utils feh; \
+        lxterminal jwm menu mousepad apache2-utils ettercap-graphical arping python3 python3-scapy feh; \
     rm -rf /var/lib/apt/lists/*; \
+    sed -i 's/65534/0/' /etc/ettercap/etter.conf; \
     /bin/echo -e '\
 ?package(cmake):\\\n\
  needs="x11"\\\n\

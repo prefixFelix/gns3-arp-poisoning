@@ -7,7 +7,7 @@ FROM debian:bullseye-slim
 
 MAINTAINER prefixfelix
 
-# Install network stuff
+# Install basic / networking tools
 RUN set -ex; \
     \
     apt-get update; \
@@ -17,18 +17,20 @@ RUN set -ex; \
     rm -f base_packages packages; \
     \
     DEBIAN_FRONTEND=noninteractive apt-get -y --no-install-recommends install \
-        iproute2 iputils-ping net-tools tcpdump telnet traceroute iperf3 knot-host openssh-client mtr-tiny \
-        socat nano vim-tiny vim isc-dhcp-client ca-certificates wget; \
+        iproute2 iputils-ping net-tools tcpdump telnet traceroute iperf3 knot-host mtr-tiny \
+        socat nano isc-dhcp-client ca-certificates wget; \
     rm -rf /var/lib/apt/lists/*
 
 
+# Download additional files for the lab
 RUN set -ex; \
     \
     cd /root; \
-    wget https://raw.githubusercontent.com/prefixFelix/gns3-arp-poisoning/main/misc/innocent_cat.jpg
+    wget https://raw.githubusercontent.com/prefixFelix/gns3-arp-poisoning/main/misc/innocent-cat.jpg; \
+    wget https://raw.githubusercontent.com/prefixFelix/gns3-arp-poisoning/main/misc/payroll.txt
 
 
-# Install connection stuff
+# Install filezilla + additional tools
 ADD https://github.com/Yelp/dumb-init/releases/download/v1.2.2/dumb-init_1.2.2_amd64 /usr/local/sbin/dumb-init
 
 RUN set -ex; \
@@ -36,7 +38,7 @@ RUN set -ex; \
     chmod 755 /usr/local/sbin/dumb-init; \
     apt-get update; \
     DEBIAN_FRONTEND=noninteractive apt-get -y --no-install-recommends install \
-        filezilla lxterminal jwm menu mousepad apache2-utils feh; \
+        lxterminal jwm menu mousepad apache2-utils filezilla feh; \
     rm -rf /var/lib/apt/lists/*; \
     /bin/echo -e '\
 ?package(filezilla):\\\n\

